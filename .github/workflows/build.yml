@@ -1,0 +1,16 @@
+name: CI
+
+on: [pull_request, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - run: make build
+    - run: git status
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v4
+      with:
+        base: main
+        branch: automation/now
