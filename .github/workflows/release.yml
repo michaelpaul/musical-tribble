@@ -22,14 +22,9 @@ on:
     branches:
       - main
 
-env:
-  IS_PREPARE: ${{ inputs.stage == 'prepare' || false }} 
-  IS_PUBLISH: ${{ inputs.stage == 'publish' || false }}
-  HAS_RELEASE_LABEL: ${{ contains(github.event.issue.labels.*.name, 'release') }}
-
 jobs:
   prepare:
-    if: env.IS_PREPARE || (github.event.pull_request.merged && !env.HAS_RELEASE_LABEL)
+    if: (inputs.stage == 'prepare' || false) || (github.event.pull_request.merged && ! contains(github.event.pull_request.labels.*.name, 'release'))
     permissions:
       contents: write
       pull-requests: write
@@ -44,7 +39,7 @@ jobs:
           version-files: src/Adyen/Client.php README.md
           pre-release: ${{ inputs.pre-release || false }}
   publish:
-    if: env.IS_PUBLISH || (github.event.pull_request.merged && env.HAS_RELEASE_LABEL)
+    if: (inputs.stage == 'publish' || false) || (github.event.pull_request.merged && contains(github.event.pull_request.labels.*.name, 'release'))
     permissions:
       contents: write
     uses: Adyen/release-automation-action/.github/workflows/reusable-github-release.yml@v1.1.1
