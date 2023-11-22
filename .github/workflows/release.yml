@@ -25,6 +25,5 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           develop-branch: main
-          version-files: package.json
           pre-release: ${{ inputs.pre-release || false }}
           release-title: My Random Library
